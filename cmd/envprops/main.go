@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github/myhops/envprops"
 	"io"
@@ -9,23 +8,16 @@ import (
 )
 
 type options struct {
-	defaults   string
-	properties string
-	envPrefix  string
-	out        string
-}
+	defaults  string
+	envPrefix string
+	out       string
 
-func getOptions(args []string, getenv func(string) string) (*options, error) {
-	fs := flag.NewFlagSet(args[0], flag.ExitOnError)
-	opts := &options{}
-	fs.StringVar(&opts.defaults, "defaults", "", "")
-	fs.StringVar(&opts.properties, "properties", "", "")
-	fs.StringVar(&opts.envPrefix, "env-prefix", "", "")
-	fs.StringVar(&opts.out, "out", "-", "output file, - for stdout")
-	if err := fs.Parse(args[1:]); err != nil {
-		return nil, err
-	}
-	return opts, nil
+	loglevel  string
+	logformat string
+
+	getenv func(string) string
+
+	dryrun bool
 }
 
 func loadDefaults(defaults string) ([]*envprops.Property, error) {
@@ -54,28 +46,40 @@ func openOutput(out string) (io.WriteCloser, error) {
 }
 
 func run(args []string, getenv func(string) string) error {
-	// get the options
-	opts, err := getOptions(args, getenv)
-	if err != nil {
-		return err
+	opts := &options{
+		getenv: getenv,
 	}
-	// load the defaults
+	cmd := newRootCmd(opts)
+	cmd.SetArgs(args)
+	return cmd.Execute()
+}
+
+func runOpts(opts *options) {
+	if opts.dryrun {
+		fmt.Printf("%#v\n", opts)
+		return
+	}
+
 	props, err := loadDefaults(opts.defaults)
 	if err != nil {
-		return err
+		return
+	}
+
+	if opts.getenv == nil {
+		opts.getenv = os.Getenv
 	}
 
 	// collect the env vars
-	getEnvVars(props, getenv)
+	getEnvVars(props, opts.getenv)
 
 	// open the output file
 	out, err := openOutput(opts.out)
 	if err != nil {
-		return err
+		return
 	}
 
 	// write the properties file
-	return envprops.WriteProperties(out, props)
+	envprops.WriteProperties(out, props)
 }
 
 func main() {
@@ -84,3 +88,4 @@ func main() {
 		os.Exit(1)
 	}
 }
+
