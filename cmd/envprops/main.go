@@ -29,9 +29,9 @@ func loadDefaults(defaults string) ([]*envprops.Property, error) {
 	return envprops.ReadProperties(f)
 }
 
-func getEnvVars(props []*envprops.Property, getenv func(string) string) {
+func getEnvVars(prefix string, props []*envprops.Property, getenv func(string) string) {
 	for _, p := range props {
-		v := getenv(p.EnvVarName())
+		v := getenv(p.EnvVarName(prefix))
 		if v != "" {
 			p.Value = v
 		}
@@ -70,7 +70,7 @@ func runOpts(opts *options) {
 	}
 
 	// collect the env vars
-	getEnvVars(props, opts.getenv)
+	getEnvVars(opts.envPrefix, props, opts.getenv)
 
 	// open the output file
 	out, err := openOutput(opts.out)
@@ -88,4 +88,3 @@ func main() {
 		os.Exit(1)
 	}
 }
-

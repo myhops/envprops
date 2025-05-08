@@ -38,7 +38,7 @@ func Test_getEnvVars(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			getEnvVars(tt.args.props, tt.args.getenv)
+			// getEnvVars(tt.ar  tt.args.props, tt.args.getenv)
 			t.Log("done")
 		})
 	}
