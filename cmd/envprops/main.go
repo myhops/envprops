@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github/myhops/envprops"
 	"io"
+	"log/slog"
 	"os"
 )
 
@@ -12,7 +13,7 @@ type options struct {
 	envPrefix string
 	out       string
 
-	loglevel  string
+	loglevel  slog.Level
 	logformat string
 
 	getenv func(string) string
@@ -55,6 +56,8 @@ func run(args []string, getenv func(string) string) error {
 }
 
 func runOpts(opts *options) {
+	initLogging(opts)
+	
 	if opts.dryrun {
 		fmt.Printf("%#v\n", opts)
 		return
@@ -80,6 +83,22 @@ func runOpts(opts *options) {
 
 	// write the properties file
 	envprops.WriteProperties(out, props)
+}
+
+func initLogging(opts *options) {
+	ho := &slog.HandlerOptions{
+		Level: opts.loglevel,
+	}
+	var h slog.Handler
+	switch opts.logformat {
+	case "TEXT":
+		h = slog.NewTextHandler(os.Stderr, ho)
+	case "JSON":
+		h = slog.NewJSONHandler(os.Stderr, ho)
+	}
+
+	logger := slog.New(h)
+	slog.SetDefault(logger)
 }
 
 func main() {
