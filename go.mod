@@ -3,6 +3,7 @@ module github/myhops/envprops
 go 1.24.2
 
 require (
+	github.com/magiconair/properties v1.8.10
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.6
 	github.com/spf13/viper v1.20.1

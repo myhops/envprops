@@ -2,6 +2,7 @@ package main
 
 import (
 	"github/myhops/envprops"
+	"log/slog"
 	"testing"
 )
 
@@ -40,6 +41,37 @@ func Test_getEnvVars(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// getEnvVars(tt.ar  tt.args.props, tt.args.getenv)
 			t.Log("done")
+		})
+	}
+}
+
+func Test_runOpts(t *testing.T) {
+	type args struct {
+		opts *options
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		// TODO: Add test cases.
+		{
+			name: "empty test",
+			args: args{
+				opts: &options{
+					defaults: "../../test.properties",
+					loglevel: slog.LevelInfo,
+					logformat: "TEXT",
+					
+					getenv: func(key string) string {
+						return "NOTEMPTY"
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			runOpts(tt.args.opts)
 		})
 	}
 }

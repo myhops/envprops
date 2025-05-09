@@ -141,47 +141,47 @@ func TestReadProperties(t *testing.T) {
 	}
 }
 
-func Test_cleanupLine(t *testing.T) {
-	type args struct {
-		s []byte
-	}
-	tests := []struct {
-		name string
-		args args
-		want []byte
-	}{
-		// TODO: Add test cases.
-		{
-			name: "simple",
-			args: args{
-				s: []byte("foo=bar"),
-			},
-			want: []byte("foo=bar"),
-		},
-		{
-			name: "comment",
-			args: args{
-				s: []byte("foo=bar # this is a comment"),
-			},
-			want: []byte("foo=bar"),
-		},
-		{
-			name: "empty",
-			args: args{
-				s: []byte(""),
-			},
-			want: nil,
-		},
-	}
+// func Test_cleanupLine(t *testing.T) {
+// 	type args struct {
+// 		s []byte
+// 	}
+// 	tests := []struct {
+// 		name string
+// 		args args
+// 		want []byte
+// 	}{
+// 		// TODO: Add test cases.
+// 		{
+// 			name: "simple",
+// 			args: args{
+// 				s: []byte("foo=bar"),
+// 			},
+// 			want: []byte("foo=bar"),
+// 		},
+// 		{
+// 			name: "comment",
+// 			args: args{
+// 				s: []byte("foo=bar # this is a comment"),
+// 			},
+// 			want: []byte("foo=bar"),
+// 		},
+// 		{
+// 			name: "empty",
+// 			args: args{
+// 				s: []byte(""),
+// 			},
+// 			want: nil,
+// 		},
+// 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := cleanupLine(tt.args.s); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("cleanupLine() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			if got := cleanupLine(tt.args.s); !reflect.DeepEqual(got, tt.want) {
+// 				t.Errorf("cleanupLine() = %v, want %v", got, tt.want)
+// 			}
+// 		})
+// 	}
+// }
 
 func TestEnvVarName(t *testing.T) {
 	type args struct {

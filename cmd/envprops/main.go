@@ -56,7 +56,7 @@ func run(args []string, getenv func(string) string) error {
 	return cmd.Execute()
 }
 
-func printOptions(opts *options, w io.Writer){
+func printOptions(opts *options, w io.Writer) {
 	fmt.Fprintf(w, "defaults  : %s\n", opts.defaults)
 	fmt.Fprintf(w, "env prefix: %s\n", opts.envPrefix)
 	fmt.Fprintf(w, "out       : %s\n", opts.out)
@@ -66,13 +66,13 @@ func printOptions(opts *options, w io.Writer){
 
 func runOpts(opts *options) {
 	initLogging(opts)
-	
+
 	if opts.dryrun {
 		printOptions(opts, os.Stdout)
 		return
 	}
 
-	props, err := loadDefaults(opts.defaults)
+	p, err := loadDefaults(opts.defaults)
 	if err != nil {
 		return
 	}
@@ -82,7 +82,7 @@ func runOpts(opts *options) {
 	}
 
 	// collect the env vars
-	getEnvVars(opts.envPrefix, props, opts.getenv)
+	getEnvVars(opts.envPrefix, p, opts.getenv)
 
 	// open the output file
 	out, err := openOutput(opts.out)
@@ -91,7 +91,7 @@ func runOpts(opts *options) {
 	}
 
 	// write the properties file
-	envprops.WriteProperties(out, props)
+	envprops.WriteProperties(out, p)
 }
 
 func initLogging(opts *options) {
