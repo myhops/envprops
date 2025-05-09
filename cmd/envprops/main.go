@@ -8,6 +8,7 @@ import (
 	"os"
 )
 
+// options
 type options struct {
 	defaults  string
 	envPrefix string
