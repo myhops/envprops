@@ -55,11 +55,19 @@ func run(args []string, getenv func(string) string) error {
 	return cmd.Execute()
 }
 
+func printOptions(opts *options, w io.Writer){
+	fmt.Fprintf(w, "defaults  : %s\n", opts.defaults)
+	fmt.Fprintf(w, "env prefix: %s\n", opts.envPrefix)
+	fmt.Fprintf(w, "out       : %s\n", opts.out)
+	fmt.Fprintf(w, "log level :  %s\n", opts.loglevel.String())
+	fmt.Fprintf(w, "log format: %s\n", opts.logformat)
+}
+
 func runOpts(opts *options) {
 	initLogging(opts)
 	
 	if opts.dryrun {
-		fmt.Printf("%#v\n", opts)
+		printOptions(opts, os.Stdout)
 		return
 	}
 
