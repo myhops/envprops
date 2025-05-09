@@ -1,4 +1,4 @@
-module github/myhops/envprops
+module github.com/myhops/envprops
 
 go 1.24.2
 

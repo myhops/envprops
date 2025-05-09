@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github/myhops/envprops"
+	"github.com/myhops/envprops"
 	"io"
 	"log/slog"
 	"os"

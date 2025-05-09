@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github/myhops/envprops"
+	"github.com/myhops/envprops"
 	"log/slog"
 	"testing"
 )
