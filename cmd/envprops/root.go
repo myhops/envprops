@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// newRootCmd creates the root command
 func newRootCmd(opts *options) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "envprops",
