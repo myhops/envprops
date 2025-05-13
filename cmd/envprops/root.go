@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log/slog"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -24,8 +23,6 @@ func newRootCmd(opts *options) *cobra.Command {
 	cmd.Flags().StringVarP(&opts.out, "output", "o", "-", "Output file, omit or use - for stdout o")
 	cmd.Flags().StringVarP(&opts.envPrefix, "envprefix", "p", "", "Prefix for the env vars")
 	cmd.Flags().BoolVar(&opts.dryrun, "dryrun", false, "Show the options only")
-	cmd.Flags().Var(NewLogLevelValue(slog.LevelDebug, &opts.loglevel), "loglevel", "slog log level")
-	cmd.Flags().Var(NewLogformatValue("TEXT", &opts.logformat), "logformat", "TEXT or JSON")
 
 	initEnvVars(cmd)
 
