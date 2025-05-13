@@ -23,7 +23,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"log/slog"
 	"os"
 
@@ -51,7 +50,6 @@ func ucRootConfig() usecases.RootConfig {
 func initLogging(cmd *cobra.Command) {
 	level := cmd.Flag("loglevel").Value.(*logLevelValue)
 	format := cmd.Flag("logformat").Value.(*logFormatValue)
-	log.Printf("initLogging called, level: %s", level)
 	ho := &slog.HandlerOptions{
 		Level: slog.Level(*level),
 	}
@@ -89,9 +87,7 @@ to quickly create a Cobra application.`,
 		uc.Run(cmd.Context())
 	},
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		log.Println("rootCmd.PersistentPreRun called before initLogging")
 		initLogging(cmd)
-		log.Println("rootCmd.PersistentPreRun called after initLogging")
 	},
 }
 
