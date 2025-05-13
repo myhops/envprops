@@ -10,9 +10,10 @@ import (
 
 type ExecConfig struct {
 	RootConfig
-	Arg0 string
-	Args []string
-	Env  []string
+	Arg0       string
+	Args       []string
+	Env        []string
+	NoEnvprops bool
 }
 
 type execUsecase struct {

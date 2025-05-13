@@ -11,6 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	NoEnvprops bool
+)
+
 func ucExecConfig() usecases.ExecConfig {
 	cfg := usecases.ExecConfig{
 		RootConfig: ucRootConfig(),
@@ -36,6 +40,7 @@ to quickly create a Cobra application.`,
 		cfg.Arg0 = args[0]
 		cfg.Args = args
 		cfg.Env = os.Environ()
+		cfg.NoEnvprops = NoEnvprops
 
 		logger.Debug("exec called",
 			slog.Any("args", args),
@@ -53,6 +58,7 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// execCmd.PersistentFlags().String("foo", "", "A help for foo")
+	execCmd.Flags().Bool("no-envprops", false, "Disable getting props from env")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
