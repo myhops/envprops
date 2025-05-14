@@ -85,6 +85,7 @@ to quickly create a Cobra application.`,
 		cfg := ucRootConfig()
 		uc := usecases.NewRootUsecase(cfg)
 		uc.Run(cmd.Context())
+		cmd.Help()
 	},
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		initLogging(cmd)
@@ -106,16 +107,14 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cli.yaml)")
-
 	rootCmd.PersistentFlags().BoolVar(&Dryrun, "dryrun", false, "Show the options only")
 	rootCmd.PersistentFlags().Var(NewLogLevelValue(slog.LevelInfo, &Loglevel), "loglevel", "slog log level")
 	rootCmd.PersistentFlags().Var(NewLogformatValue("TEXT", &Logformat), "logformat", "TEXT or JSON")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.

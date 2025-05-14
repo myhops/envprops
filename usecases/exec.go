@@ -10,6 +10,7 @@ import (
 
 type ExecConfig struct {
 	RootConfig
+	EnvPropsConfig
 	Arg0       string
 	Args       []string
 	Env        []string

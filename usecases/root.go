@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 )
 
@@ -27,5 +26,5 @@ func NewRootUsecase(cfg RootConfig) rootUsecase {
 }
 
 func (r *rootUsecase) Run(ctx context.Context) {
-	fmt.Println("rootUsecase.Run called")
+
 }

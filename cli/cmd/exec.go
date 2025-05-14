@@ -18,6 +18,7 @@ var (
 func ucExecConfig() usecases.ExecConfig {
 	cfg := usecases.ExecConfig{
 		RootConfig: ucRootConfig(),
+		EnvPropsConfig: ucEnvPropsConfig(),
 	}
 	return cfg
 }
@@ -59,6 +60,9 @@ func init() {
 	// and all subcommands, e.g.:
 	// execCmd.PersistentFlags().String("foo", "", "A help for foo")
 	execCmd.Flags().Bool("no-envprops", false, "Disable getting props from env")
+	execCmd.Flags().StringVarP(&Defaults, "defaults", "d", "", "Defaults file")
+	execCmd.Flags().StringVarP(&Out, "output", "o", "-", "Output file, omit or use - for stdout o")
+	execCmd.Flags().StringVarP(&EnvPrefix, "envprefix", "p", "", "Prefix for the env vars")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
