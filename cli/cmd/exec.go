@@ -19,6 +19,7 @@ func ucExecConfig() usecases.ExecConfig {
 	cfg := usecases.ExecConfig{
 		RootConfig: ucRootConfig(),
 		EnvPropsConfig: ucEnvPropsConfig(),
+		NoEnvprops: NoEnvprops,
 	}
 	return cfg
 }
@@ -59,7 +60,7 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// execCmd.PersistentFlags().String("foo", "", "A help for foo")
-	execCmd.Flags().Bool("no-envprops", false, "Disable getting props from env")
+	execCmd.Flags().BoolVar(&NoEnvprops, "no-envprops", false, "Disable getting props from env")
 	execCmd.Flags().StringVarP(&Defaults, "defaults", "d", "", "Defaults file")
 	execCmd.Flags().StringVarP(&Out, "output", "o", "-", "Output file, omit or use - for stdout o")
 	execCmd.Flags().StringVarP(&EnvPrefix, "envprefix", "p", "", "Prefix for the env vars")

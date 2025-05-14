@@ -22,6 +22,16 @@ type execUsecase struct {
 }
 
 func (e *execUsecase) Run(ctx context.Context) {
+
+	if !e.cfg.NoEnvprops {
+		if err := NewEnvPropsUsecase(e.cfg.EnvPropsConfig).RunE(ctx); err != nil {
+			slog.Default().Error("running envprops use case failed", 
+			"command", "exec",
+			"error", err.Error())
+			return
+		}
+	}
+
 	logger := slog.Default().With(
 		slog.String("command", "exec"),
 	)

@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
@@ -28,7 +29,7 @@ func NewEnvPropsUsecase(cfg EnvPropsConfig) *envPropsUsecase {
 	return &envPropsUsecase{cfg: cfg}
 }
 
-func (e *envPropsUsecase) Run(ctx context.Context) {
+func (e *envPropsUsecase) RunE(ctx context.Context) error {
 	logger := slog.Default().With(
 		slog.String("command", "envprops"),
 	)
@@ -38,7 +39,7 @@ func (e *envPropsUsecase) Run(ctx context.Context) {
 		logger.Error("failed to load defaults",
 			slog.String("error", err.Error()),
 		)
-		return
+		return fmt.Errorf("failed to load defaults: %w", err)
 	}
 
 	e.getenv = os.Getenv
@@ -55,19 +56,24 @@ func (e *envPropsUsecase) Run(ctx context.Context) {
 		logger.Error("failed to open output",
 			slog.String("error", err.Error()),
 		)
-		return
+		return fmt.Errorf("failed to open output: %w", err)
 	}
 	defer out.Close()
 
 	// // write the properties file
 	err = envprops.WriteProperties(out, p)
 	if err != nil {
-		logger.Error("failed to open output",
+		logger.Error("failed to write properties",
 			slog.String("error", err.Error()),
 		)
-		return
+		return fmt.Errorf("failed to write properties: %w", err)
 	}
 	logger.Info("enprops done")
+	return nil
+}
+
+func (e *envPropsUsecase) Run(ctx context.Context) {
+	e.RunE(ctx)
 }
 
 func getEnvVars(prefix string, props []*envprops.Property, getenv func(string) string) {
