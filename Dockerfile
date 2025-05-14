@@ -4,9 +4,8 @@ COPY . /workdir
 
 WORKDIR /workdir
 
-RUN ls
-RUN go build -o envprops ./cmd/envprops
-
+RUN CGO_ENABLED=0 go build -o envprops ./cmd/envprops
+RUN ldd envprops
 
 
 FROM alpine

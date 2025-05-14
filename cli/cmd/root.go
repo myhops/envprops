@@ -25,9 +25,11 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"strings"
 
 	"github.com/myhops/envprops/usecases"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
@@ -88,6 +90,7 @@ to quickly create a Cobra application.`,
 		cmd.Help()
 	},
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		bindFlags(cmd, viper.GetViper())
 		initLogging(cmd)
 	},
 }
@@ -139,4 +142,25 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
+
+	viper.SetEnvPrefix("ENVPROPS")
+	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
+
+}
+
+func bindFlags(cmd *cobra.Command, v *viper.Viper) {
+	logger := slog.Default()
+	cmd.Flags().VisitAll(func(f *pflag.Flag) {
+		logger.Debug("visiting flag", "fname", f.Name)
+		// Determine the naming convention of the flags when represented in the config file
+		// If using camelCase in the config file, replace hyphens with a camelCased string.
+		// Since viper does case-insensitive comparisons, we don't need to bother fixing the case, and only need to remove the hyphens.
+		configName := f.Name
+
+		// Apply the viper config value to the flag when the flag is not set and viper has a value
+		if !f.Changed && v.IsSet(configName) {
+			val := v.Get(configName)
+			cmd.Flags().Set(f.Name, fmt.Sprintf("%v", val))
+		}
+	})
 }

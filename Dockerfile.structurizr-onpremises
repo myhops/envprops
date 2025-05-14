@@ -1,0 +1,13 @@
+FROM golang:alpine AS build
+
+COPY . /workdir
+
+WORKDIR /workdir
+
+RUN go build -o envprops ./cmd/envprops
+
+FROM structurizr/onpremises
+
+COPY --from=build /workdir/envprops /app/envprops
+
+CMD ["/app/envprops", "exec", "--no-envprops", "--", "catalina.sh", "run"]
