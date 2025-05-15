@@ -9,14 +9,14 @@ import (
 	"os"
 )
 
-type GenDockerfileConfig struct {
+type DockerfileConfig struct {
 	RootConfig
 	Inspect    string
 	Dockerfile string
 }
 
-type genDockerfileUsecase struct {
-	cfg GenDockerfileConfig
+type DockerfileUsecase struct {
+	cfg DockerfileConfig
 }
 
 // types to unmarshal the output of inspect
@@ -28,11 +28,11 @@ type Image struct {
 	}
 }
 
-func NewGenDockerfileUsecase(cfg GenDockerfileConfig) *genDockerfileUsecase {
-	return &genDockerfileUsecase{cfg: cfg}
+func NewDockerfileUsecase(cfg DockerfileConfig) *DockerfileUsecase {
+	return &DockerfileUsecase{cfg: cfg}
 }
 
-func (g *genDockerfileUsecase) unmarshalImage(data []byte) (*Image, error) {
+func (g *DockerfileUsecase) unmarshalImage(data []byte) (*Image, error) {
 	var res []*Image
 
 	err := json.Unmarshal(data, &res)
@@ -45,7 +45,7 @@ func (g *genDockerfileUsecase) unmarshalImage(data []byte) (*Image, error) {
 	return res[0], nil
 }
 
-func (g *genDockerfileUsecase) readData() ([]byte, error) {
+func (g *DockerfileUsecase) readData() ([]byte, error) {
 	in := os.Stdin
 	if g.cfg.Inspect != "-" {
 		in, err := os.Open(g.cfg.Inspect)
@@ -58,13 +58,13 @@ func (g *genDockerfileUsecase) readData() ([]byte, error) {
 	return io.ReadAll(in)
 }
 
-func (g *genDockerfileUsecase) genDockerfile(img *Image) {
+func (g *DockerfileUsecase) Dockerfile(img *Image) {
 	fmt.Printf("%#v\n", img)
 }
 
-func (g *genDockerfileUsecase) Run(ctx context.Context) {
+func (g *DockerfileUsecase) Run(ctx context.Context) {
 	logger := slog.Default().With(
-		slog.String("command", "gendockerfile"),
+		slog.String("command", "dockerfile"),
 	)
 
 	// Read the data
@@ -85,7 +85,7 @@ func (g *genDockerfileUsecase) Run(ctx context.Context) {
 		return
 	}
 
-	g.genDockerfile(img)
+	g.Dockerfile(img)
 
-	logger.Info("gendockerfile done")
+	logger.Info("dockerfile done")
 }

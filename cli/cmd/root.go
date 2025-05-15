@@ -73,7 +73,7 @@ func initLogging(cmd *cobra.Command) {
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "envprops",
+	Use:   "f12",
 	Short: "A brief description of your application",
 	Long: `A longer description that spans multiple lines and likely contains
 examples and usage of using your application. For example:
@@ -143,7 +143,7 @@ func initConfig() {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
 
-	viper.SetEnvPrefix("ENVPROPS")
+	viper.SetEnvPrefix("F12")
 	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 
 }

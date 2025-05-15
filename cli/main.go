@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 package main
 
-import "github.com/myhops/envprops/cli/cmd"
+import "github.com/myhops/envprops/f12/cmd"
 
 func main() {
 	cmd.Execute()
