@@ -13,6 +13,7 @@ import (
 var (
 	Inspect    string
 	Dockerfile string
+	Registry   string
 )
 
 func ucDockerfileConfig() usecases.DockerfileConfig {
@@ -20,6 +21,7 @@ func ucDockerfileConfig() usecases.DockerfileConfig {
 		RootConfig: ucRootConfig(),
 		Inspect:    Inspect,
 		Dockerfile: Dockerfile,
+		Registry: Registry,
 	}
 }
 
@@ -52,6 +54,7 @@ func init() {
 
 	dockerfileCmd.Flags().StringVarP(&Inspect, "inspect", "i", "-", "File with the output of docker inspect")
 	dockerfileCmd.Flags().StringVarP(&Dockerfile, "dockerfile", "d", "-", "Name of the resulting dockerfile")
+	dockerfileCmd.Flags().StringVarP(&Registry, "registry", "r", "", "Registry name of the image")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:

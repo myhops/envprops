@@ -32,10 +32,7 @@ CMD [{{ quoteJoin  .Config.Cmd ", " }} ]
 func run() {
 	img := &usecases.Image{
 		RepoTags: []string{"image/one"},
-		Config: struct {
-			Cmd        []string
-			Entrypoint []string
-		}{
+		Config: &usecases.Config{
 			Cmd:        []string{"cmd1", "cmd2"},
 			Entrypoint: []string{"e1", "e2"},
 		},
