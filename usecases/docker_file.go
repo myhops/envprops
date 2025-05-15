@@ -154,12 +154,12 @@ func (g *dockerfileUsecase) Run(ctx context.Context) {
 }
 
 func (g *dockerfileUsecase) fromManifest(ctx context.Context) (*Image, error) {
-	logger := g.logger.With("method", "RunE")
+	logger := g.logger.With("method", "fromManifest")
 
 	// Read the data
 	data, err := g.readData()
 	if err != nil {
-		return nil, fmt.Errorf("cannot readData: %w", err)
+		return nil, fmt.Errorf("readData failed: %w", err)
 	}
 	logger.Debug("read data")
 	img, err := g.unmarshalImage(data)
@@ -177,15 +177,15 @@ func (g *dockerfileUsecase) fromManifest(ctx context.Context) (*Image, error) {
 	return img, nil
 }
 
-func (g *dockerfileUsecase) fromRegistry()(*Image, error) {
-	config, err :=  oci.FetchConfig(g.cfg.Registry)
+func (g *dockerfileUsecase) fromRegistry() (*Image, error) {
+	config, err := oci.FetchConfig(g.cfg.Registry)
 	if err != nil {
 		return nil, err
 	}
 	return &Image{
-		RepoTags: []string{g.cfg.Registry		},
+		RepoTags: []string{g.cfg.Registry},
 		Config: &Config{
-			Cmd: config.Cmd,
+			Cmd:        config.Cmd,
 			Entrypoint: config.Entrypoint,
 		},
 	}, nil
@@ -197,7 +197,6 @@ func (g *dockerfileUsecase) getImage(ctx context.Context) (*Image, error) {
 	}
 	return g.fromManifest(ctx)
 }
-
 
 func (g *dockerfileUsecase) RunE(ctx context.Context) error {
 	img, err := g.getImage(ctx)
@@ -216,4 +215,3 @@ func (g *dockerfileUsecase) RunE(ctx context.Context) error {
 
 	return g.Dockerfile(img)
 }
-
