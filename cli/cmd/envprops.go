@@ -44,7 +44,6 @@ func init() {
 	rootCmd.AddCommand(envpropsCmd)
 
 	// Here you will define your flags and configuration settings.
-	// viper.SetEnvPrefix("ENVPROPS")
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
