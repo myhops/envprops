@@ -50,7 +50,13 @@ func ucRootConfig() usecases.RootConfig {
 }
 
 func initLogging(cmd *cobra.Command) {
-	level := cmd.Flag("loglevel").Value.(*logLevelValue)
+	level := new(logLevelValue)
+
+	*level = logLevelValue(slog.LevelWarn)
+	if cmd.Flag("loglevel").Changed {
+		level, _= cmd.Flag("loglevel").Value.(*logLevelValue)
+	}
+
 	format := cmd.Flag("logformat").Value.(*logFormatValue)
 	ho := &slog.HandlerOptions{
 		Level: slog.Level(*level),
@@ -112,7 +118,7 @@ func init() {
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cli.yaml)")
 	rootCmd.PersistentFlags().BoolVar(&Dryrun, "dryrun", false, "Show the options only")
-	rootCmd.PersistentFlags().Var(NewLogLevelValue(slog.LevelInfo, &Loglevel), "loglevel", "slog log level")
+	rootCmd.PersistentFlags().Var(NewLogLevelValue(slog.LevelWarn, &Loglevel), "loglevel", "slog log level")
 	rootCmd.PersistentFlags().Var(NewLogformatValue("TEXT", &Logformat), "logformat", "TEXT or JSON")
 
 	// Cobra also supports local flags, which will only run
