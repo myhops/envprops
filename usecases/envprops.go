@@ -68,7 +68,7 @@ func (e *envPropsUsecase) RunE(ctx context.Context) error {
 		)
 		return fmt.Errorf("failed to write properties: %w", err)
 	}
-	logger.Info("enprops done")
+	logger.Debug("enpvrops done")
 	return nil
 }
 

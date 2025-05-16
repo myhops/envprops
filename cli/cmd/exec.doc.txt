@@ -1,0 +1,7 @@
+    $ f12 exec --no-envprops -- f12 help
+    f12 is a program that helps you in fixing container images
+    that expect a properties file on a writable volume.
+    It creates a new Dockerfile that can be fully configured
+    using environment variables.
+
+    ... lines removed

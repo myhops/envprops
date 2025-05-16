@@ -4,10 +4,9 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"log"
-
 	"github.com/myhops/envprops/usecases"
 	"github.com/spf13/cobra"
+	_ "embed"
 )
 
 var (
@@ -21,22 +20,21 @@ func ucDockerfileConfig() usecases.DockerfileConfig {
 		RootConfig: ucRootConfig(),
 		Inspect:    Inspect,
 		Dockerfile: Dockerfile,
-		Registry: Registry,
+		Registry:   Registry,
 	}
 }
+
+//go:embed docker_file.doc.txt
+var dockerfileExample string
 
 // dockerfileCmd represents the dockerfile command
 var dockerfileCmd = &cobra.Command{
 	Use:   "dockerfile",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Creates a Dockerfile that is more 12 factor-like",
+	Long: `Dockerfile creates a Dockerfile that includes f12
+and that makes the base image more 12 factor-like.`,
+	Example: dockerfileExample,
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Println("run called")
 		cfg := ucDockerfileConfig()
 		uc := usecases.NewDockerfileUsecase(cfg)
 		uc.Run(cmd.Context())

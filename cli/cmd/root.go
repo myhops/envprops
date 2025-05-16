@@ -80,13 +80,11 @@ func initLogging(cmd *cobra.Command) {
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "f12",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "f12 helps you make container images more 12 factor",
+	Long: `f12 is a program that helps you in fixing container images
+that expect a properties file on a writable volume.
+It creates a new Dockerfile that can be fully configured
+using environment variables.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {

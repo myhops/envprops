@@ -4,6 +4,7 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	_ "embed"
 	"github.com/myhops/envprops/usecases"
 	"github.com/spf13/cobra"
 )
@@ -13,6 +14,10 @@ var (
 	Out       string
 	EnvPrefix string
 )
+
+//go:embed envprops.doc.txt
+var envpropsExample string
+
 
 func ucEnvPropsConfig() usecases.EnvPropsConfig {
 	return usecases.EnvPropsConfig{
@@ -26,13 +31,12 @@ func ucEnvPropsConfig() usecases.EnvPropsConfig {
 // envpropsCmd represents the envprops command
 var envpropsCmd = &cobra.Command{
 	Use:   "envprops",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Envprops creates a properties file",
+	Long: `Envprops takes a properties file as input, 
+converts the property names to env var names and 
+overwrites the values if the env var for that property is set
+and then writes the result to the destination.`,
+	Example: envpropsExample,
 	Run: func(cmd *cobra.Command, args []string) {
 		cfg := ucEnvPropsConfig()
 		uc := usecases.NewEnvPropsUsecase(cfg)

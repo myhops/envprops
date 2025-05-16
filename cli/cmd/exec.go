@@ -6,6 +6,7 @@ package cmd
 import (
 	"log/slog"
 	"os"
+	_ "embed"
 
 	"github.com/myhops/envprops/usecases"
 	"github.com/spf13/cobra"
@@ -14,6 +15,9 @@ import (
 var (
 	NoEnvprops bool
 )
+
+//go:embed exec.doc.txt
+var execExample string
 
 func ucExecConfig() usecases.ExecConfig {
 	cfg := usecases.ExecConfig{
@@ -27,14 +31,11 @@ func ucExecConfig() usecases.ExecConfig {
 // execCmd represents the exec command
 var execCmd = &cobra.Command{
 	Use:   "exec",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Exec creates the properties file and execs the command",
+	Long: `Exec performs two tasks. It runs envprops and then
+exec the command after --.`,
 	Args: cobra.MinimumNArgs(1),
+	Example: execExample,
 	Run: func(cmd *cobra.Command, args []string) {
 		logger := slog.Default()
 

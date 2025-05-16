@@ -1,0 +1,9 @@
+    $ cat defaults.properties
+    property1 = test
+    property.name = Has default value
+    whats.in.a.name
+
+    $ WHATS_IN_A_NAME="William Shakespeare" f12 envprops --defaults defaults.properties
+    property1 = test
+    property.name = Has default value
+    whats.in.a.name = William Shakespeare

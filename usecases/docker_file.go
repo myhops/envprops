@@ -34,7 +34,7 @@ ENTRYPOINT [{{ quoteJoin  .Config.Entrypoint ", " }} ]
 {{- end }}
 
 {{ if ne (len .Config.Cmd ) 0 -}}
-CMD [{{ quoteJoin  .Config.Cmd ", " }} ]
+CMD [{{ quoteJoin  .Config.Cmd ", " }}]
 {{- end }}
 `
 

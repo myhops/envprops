@@ -1,0 +1,19 @@
+    $ f12 dockerfile --registry postgres
+    FROM golang:alpine AS build
+    WORKDIR /workdir
+
+    # Create layer with dependencies
+    COPY go.mod go.sum /workdir/
+    RUN go mod download -x
+
+    # Compile the program 1
+    COPY . /workdir
+    RUN CGO_ENABLED=0 go build -o f12 ./cmd/f12
+
+    FROM postgres
+    COPY --from=build /workdir/f12 /app/f12
+
+    ENV F12_NO_ENVPROPS=1
+    ENTRYPOINT ["/app/f12", "exec", "--", "docker-entrypoint.sh" ]
+
+    CMD ["postgres"]
