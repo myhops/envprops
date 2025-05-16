@@ -21,7 +21,7 @@ WORKDIR /workdir
 COPY go.mod go.sum /workdir/
 RUN go mod download -x
 
-# Compile the program 1
+# Compile f12
 COPY . /workdir
 RUN CGO_ENABLED=0 go build -o f12 ./cmd/f12
 
