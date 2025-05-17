@@ -1,1 +1,75 @@
 bin
+
+# Binaries
+# These are the direct output of 'go build'
+# Replace 'f12' with your actual binary name(s) if different or if you have multiple.
+f12
+*.exe
+*.test
+
+# GoReleaser distribution directory
+# This is where GoReleaser puts all its artifacts (binaries, archives, checksums, etc.)
+/dist/
+
+# Go module files (if you are using a local replace directive for local development,
+# you might have local paths in go.mod that you don't want to commit if they're temporary)
+# However, go.mod and go.sum themselves should almost always be committed.
+
+# Vendored dependencies (if you run 'go mod vendor' but don't want to commit the vendor directory)
+# Most projects either commit the vendor directory or don't vendor at all.
+# /vendor/
+
+# Test coverage files
+coverage.out
+coverage.html
+*.cover
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+._*
+
+# IDE/Editor specific files
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains (GoLand, IntelliJ)
+.idea/
+*.iml
+
+# Vim
+*~
+*.swp
+*.swo
+
+# Emacs
+*#
+#*#
+
+# Local environment configuration files
+# These often contain secrets or local machine settings and should not be committed.
+.env
+.env.*
+!.env.example # It's common to commit an example env file
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+
+# Docker specific (if you have local Docker Compose overrides or similar)
+# .docker/
+# docker-compose.override.yml
+# docker-compose.override.yaml
+
+# If you generate any local reports or large data files
+# reports/
+# data/local/

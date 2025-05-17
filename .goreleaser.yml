@@ -1,11 +1,12 @@
 # .goreleaser.yml
+version: 2
 project_name: f12
 
 # Build configuration: Specifies how to build your Go application for different platforms.
 builds:
   - id: f12-build # Unique ID for this build configuration
     binary: f12    # Output binary name (matches ENTRYPOINT in Dockerfile)
-    main: .              # Path to the main package (current directory)
+    main: ./cmd/f12              # Path to the main package (current directory)
     goos:                # Target Operating Systems
       - linux
     goarch:              # Target Architectures
@@ -21,52 +22,53 @@ builds:
     ldflags:             # Linker flags
       - -s -w # Strips debug symbols and DWARF information to reduce binary size
 
-# Docker configuration: Specifies how to build and push Docker images.
-# dockers:
-#   - # First Docker image definition (can have multiple)
-#     ids:
-#       - f12-build  # Links to the 'id' of the build configuration above
-#     goos: linux          # Target OS for the Docker image
-#     goarch: amd64        # Target architecture for this specific Docker image variant
-#     image_templates:
-#       - "your-registry/your-username/f12:{{ .Tag }}-amd64" # Template for amd64 image tag
-#       - "your-registry/your-username/f12:latest-amd64"   # Another tag for amd64
-#     dockerfile: Dockerfile # Path to your Dockerfile
-#     use: buildx          # Instructs GoReleaser to use 'docker buildx'
-#     build_flag_templates: # Templates for flags passed to 'docker buildx build'
-#       - "--platform=linux/amd64"
-#       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
-#       - "--label=org.opencontainers.image.version={{ .Version }}"
-#       # Add any other buildx flags you need
+# .goreleaser.yml
+# ...
+dockers:
+  - ids: [f12-build]
+    goos: linux
+    goarch: amd64
+    image_templates:
+      - "ghcr.io/myhops/f12:{{ .Tag }}-amd64" # Corrected
+      - "ghcr.io/myhops/f12:latest-amd64"   # Corrected
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+      - "--push"  # <--- ADD THIS LINE
+    # 'contents' can be empty or removed if using pre-compiled binary Dockerfile
 
-#   - # Second Docker image definition for arm64
-#     ids:
-#       - f12-build
-#     goos: linux
-#     goarch: arm64
-#     image_templates:
-#       - "your-registry/your-username/f12:{{ .Tag }}-arm64"
-#       - "your-registry/your-username/f12:latest-arm64"
-#     dockerfile: Dockerfile
-#     use: buildx
-#     build_flag_templates:
-#       - "--platform=linux/arm64"
-#       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
-#       - "--label=org.opencontainers.image.version={{ .Version }}"
+  - ids: [f12-build]
+    goos: linux
+    goarch: arm64
+    image_templates:
+      - "ghcr.io/myhops/f12:{{ .Tag }}-arm64" # Corrected
+      - "ghcr.io/myhops/f12:latest-arm64"   # Corrected
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/arm64"
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+      - "--push"  # <--- ADD THIS LINE
+    # 'contents' can be empty or removed
 
-# # Docker Manifest configuration: Creates and pushes a multi-arch manifest list.
-# docker_manifests:
-#   - name_template: "your-registry/your-username/f12:{{ .Tag }}" # Manifest tag
-#     image_templates: # Images to include in this manifest
-#       - "your-registry/your-username/f12:{{ .Tag }}-amd64"
-#       - "your-registry/your-username/f12:{{ .Tag }}-arm64"
-#   - name_template: "your-registry/your-username/f12:latest" # 'latest' manifest tag
-#     image_templates:
-#       - "your-registry/your-username/f12:latest-amd64"
-#       - "your-registry/your-username/f12:latest-arm64"
+
+# Docker Manifest configuration: Creates and pushes a multi-arch manifest list.
+docker_manifests:
+  - name_template: "ghcr.io/myhops/f12:{{ .Tag }}" # Manifest tag
+    image_templates: # Images to include in this manifest
+      - "ghcr.io/myhops/f12:{{ .Tag }}-amd64"
+      - "ghcr.io/myhops/f12:{{ .Tag }}-arm64"
+  - name_template: "ghcr.io/myhops/f12:latest" # 'latest' manifest tag
+    image_templates:
+      - "ghcr.io/myhops/f12:latest-amd64"
+      - "ghcr.io/myhops/f12:latest-arm64"
 
 # Optional: Release configuration (e.g., for GitHub Releases)
-# release:
-#   github:
-#     owner: your-username
-#     name: your-repo
+release:
+  github:
+    owner: myhops
+    name: envprops
