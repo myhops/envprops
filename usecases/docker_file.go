@@ -14,19 +14,10 @@ import (
 	"github.com/myhops/envprops/oci"
 )
 
-const dockerfileTemplate = `FROM golang:alpine AS build
-WORKDIR /workdir
-
-# Create layer with dependencies
-COPY go.mod go.sum /workdir/
-RUN go mod download -x
-
-# Compile f12
-COPY . /workdir
-RUN CGO_ENABLED=0 go build -o f12 ./cmd/f12
+const dockerfileTemplate = `FROM ghcr.io/myhops/f12 AS f12-app
 
 FROM {{ index .RepoTags 0 }}
-COPY --from=build /workdir/f12 /app/f12
+COPY --from=f12-app /app/f12 /app/f12
 
 ENV F12_NO_ENVPROPS=1
 {{ if ne (len .Config.Entrypoint) 0 -}}
