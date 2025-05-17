@@ -1,11 +1,24 @@
 #!/bin/bash
 
 docker run --rm -it \
+    --name structurizr \
+    --network structurizr \
+    -p 8080:8080 \
     -v $(readlink -f .):/conf \
     -v structurizr-data:/usr/local/structurizr \
     -e F12_NO_ENVPROPS=0 \
     -e F12_DEFAULTS=/conf/test.properties \
     -e F12_OUTPUT=/usr/local/structurizr/structurizr.properties \
-    -e STRUCTURIZR_ADMIN=PEZA \
+    -e STRUCTURIZR_ADMIN= \
     -e STRUCTURIZR_WORKSPACE_THREADS=10 \
+    -e OTEL_SDK_DISABLED=true \
+    -e JAVA_OPTS="-javaagent:/extras/opentelemetry-javaagent.jar" \
+    -e OTEL_SERVICE_NAME=structurizr-onpremises \
+    -e OTEL_EXPORTER_OTLP_PROTOCOL=grpc \
+    -e OTEL_EXPORTER_OTLP_INSECURE=true \
+    -e OTEL_EXPORTER_OTLP_ENDPOINT=http://otelcol:4317 \
+    -e OTEL_TRACES_EXPORTER=otlp \
+    -e OTEL_METRICS_EXPORTER=otlp \
+    -e OTEL_LOGS_EXPORTER=otlp \
+    -e F12_COPYFILES=/conf/otelcol.yaml:/tmp/otelcol.yaml \
     structurizr/onpremises-f12
