@@ -7,4 +7,5 @@ docker run --rm -it \
     -e F12_DEFAULTS=/conf/test.properties \
     -e F12_OUTPUT=/usr/local/structurizr/structurizr.properties \
     -e STRUCTURIZR_ADMIN=PEZA \
+    -e STRUCTURIZR_WORKSPACE_THREADS=10 \
     structurizr/onpremises-f12
