@@ -72,6 +72,9 @@ func WriteProperties(w io.Writer, props []*Property) error {
 	p := properties.NewProperties()
 
 	for _, pp := range props {
+		if pp.Value == "" {
+			continue
+		}	
 		p.Set(pp.Key, pp.Value)
 	}
 	if _, err := p.Write(w, properties.UTF8); err != nil {

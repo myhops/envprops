@@ -10,6 +10,7 @@ ARG TARGETPLATFORM
 # Choose the variant that matches your Go binary's linkage (glibc or musl).
 # For standard CGO_ENABLED=0 Go builds on Linux, 'latest-glibc' is typical.
 FROM --platform=$TARGETPLATFORM cgr.dev/chainguard/static:latest-glibc
+
 # If you were specifically building against musl (e.g., if your previous target was Alpine for the binary itself),
 # you might use: cgr.dev/chainguard/static:latest-musl
 
