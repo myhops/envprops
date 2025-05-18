@@ -94,8 +94,8 @@ using environment variables.`,
 		cmd.Help()
 	},
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		bindFlags(cmd, viper.GetViper())
 		initLogging(cmd)
+		bindFlags(cmd, viper.GetViper())
 	},
 }
 
@@ -163,6 +163,7 @@ func bindFlags(cmd *cobra.Command, v *viper.Viper) {
 
 		// Apply the viper config value to the flag when the flag is not set and viper has a value
 		if !f.Changed && v.IsSet(configName) {
+			logger.Debug("set flag", "fname", f.Name)
 			val := v.Get(configName)
 			cmd.Flags().Set(f.Name, fmt.Sprintf("%v", val))
 		}

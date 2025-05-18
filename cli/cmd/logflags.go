@@ -42,7 +42,7 @@ func NewLogLevelValue(value slog.Level, l *slog.Level) *logLevelValue {
 // Valid values are TEXT and JSON.
 type logFormatValue string
 
-// String returns teh value as a string
+// String returns the value as a string
 func (f *logFormatValue) String() string {
 	return string(*f)
 }

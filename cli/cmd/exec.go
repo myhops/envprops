@@ -4,9 +4,9 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	_ "embed"
 	"log/slog"
 	"os"
-	_ "embed"
 
 	"github.com/myhops/envprops/usecases"
 	"github.com/spf13/cobra"
@@ -14,16 +14,26 @@ import (
 
 var (
 	NoEnvprops bool
+	CopyFiles  []CopyFile
 )
 
 //go:embed exec.doc.txt
 var execExample string
 
+func toUcCopyFiles(cf []CopyFile) []usecases.CopyFile {
+	var res []usecases.CopyFile
+	for _, c := range cf {
+		res = append(res, usecases.CopyFile(c))
+	}
+	return res
+}
+
 func ucExecConfig() usecases.ExecConfig {
 	cfg := usecases.ExecConfig{
-		RootConfig: ucRootConfig(),
+		RootConfig:     ucRootConfig(),
 		EnvPropsConfig: ucEnvPropsConfig(),
-		NoEnvprops: NoEnvprops,
+		NoEnvprops:     NoEnvprops,
+		CopyFiles:      toUcCopyFiles(CopyFiles),
 	}
 	return cfg
 }
@@ -34,7 +44,7 @@ var execCmd = &cobra.Command{
 	Short: "Exec creates the properties file and execs the command",
 	Long: `Exec performs two tasks. It runs envprops and then
 exec the command after --.`,
-	Args: cobra.MinimumNArgs(1),
+	Args:    cobra.MinimumNArgs(1),
 	Example: execExample,
 	Run: func(cmd *cobra.Command, args []string) {
 		logger := slog.Default()
@@ -65,6 +75,8 @@ func init() {
 	execCmd.Flags().StringVarP(&Defaults, "defaults", "d", "", "Defaults file")
 	execCmd.Flags().StringVarP(&Out, "output", "o", "-", "Output file, omit or use - for stdout o")
 	execCmd.Flags().StringVarP(&EnvPrefix, "envprefix", "p", "", "Prefix for the env vars")
+	// execCmd.Flags().StringSliceVar(&CopyFiles, "copyfiles", nil, "list of files to copy, comma separated or multiple flags, from:to")
+	execCmd.Flags().Var(NewCopyFilesValue(&CopyFiles), "copyfiles", "list of files to copy, comma separated or multiple flags, from:to")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
