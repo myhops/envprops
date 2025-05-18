@@ -54,7 +54,7 @@ func initLogging(cmd *cobra.Command) {
 
 	*level = logLevelValue(slog.LevelWarn)
 	if cmd.Flag("loglevel").Changed {
-		level, _= cmd.Flag("loglevel").Value.(*logLevelValue)
+		level, _ = cmd.Flag("loglevel").Value.(*logLevelValue)
 	}
 
 	format := cmd.Flag("logformat").Value.(*logFormatValue)

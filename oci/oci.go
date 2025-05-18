@@ -47,4 +47,3 @@ func FetchConfig(imageRef string) (*Config, error) {
 	res := *resp.Config
 	return &res, nil
 }
-

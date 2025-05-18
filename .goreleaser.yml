@@ -1,4 +1,7 @@
 # .goreleaser.yml
+# This file configures GoReleaser to build a multi-architecture Docker image
+# using buildx, following the recommended approach from the documentation.
+
 version: 2
 project_name: f12
 
@@ -22,53 +25,74 @@ builds:
     ldflags:             # Linker flags
       - -s -w # Strips debug symbols and DWARF information to reduce binary size
 
-# .goreleaser.yml
-# ...
+# The dockers section configures the Docker image build for EACH architecture.
+# We define a separate block for each target architecture.
 dockers:
-  - ids: [f12-build]
-    goos: linux
-    goarch: amd64
-    image_templates:
-      - "ghcr.io/myhops/f12:{{ .Tag }}-amd64" # Corrected
-      - "ghcr.io/myhops/f12:latest-amd64"   # Corrected
+  - id: f12-docker-amd64 # Unique ID for the AMD64 Docker build
+    ids: [f12-build]     # Link this Docker build to the 'f12-build' binary build
+    goos: linux          # Match the build OS
+    goarch: amd64        # Target Architecture (as a string)
+
+    use: buildx # Use buildx for this build
+
+    # Dockerfile path (defaults to 'Dockerfile' in the project root).
     dockerfile: Dockerfile
-    use: buildx
+
+    # Image name templates for the architecture-specific image.
+    image_templates:
+      - "ghcr.io/myhops/f12:{{ .Tag }}-amd64"
+      - "ghcr.io/myhops/f12:latest-amd64" # Optionally tag as latest-amd64
+
+    # Build flags to pass to `docker build`.
+    # --platform is explicitly set for this architecture.
+    # The --push flag is NOT needed here, as the docker_manifests section handles the final push.
     build_flag_templates:
       - "--platform=linux/amd64"
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
       - "--label=org.opencontainers.image.version={{ .Version }}"
-      - "--push"  # <--- ADD THIS LINE
-    # 'contents' can be empty or removed if using pre-compiled binary Dockerfile
+      - "--push"
 
-  - ids: [f12-build]
-    goos: linux
-    goarch: arm64
-    image_templates:
-      - "ghcr.io/myhops/f12:{{ .Tag }}-arm64" # Corrected
-      - "ghcr.io/myhops/f12:latest-arm64"   # Corrected
+  - id: f12-docker-arm64 # Unique ID for the ARM64 Docker build
+    ids: [f12-build]     # Link this Docker build to the 'f12-build' binary build
+    goos: linux          # Match the build OS
+    goarch: arm64        # Target Architecture (as a string)
+
+    use: buildx # Use buildx for this build
+
+    # Dockerfile path (defaults to 'Dockerfile' in the project root).
     dockerfile: Dockerfile
-    use: buildx
+
+    # Image name templates for the architecture-specific image.
+    image_templates:
+      - "ghcr.io/myhops/f12:{{ .Tag }}-arm64"
+      - "ghcr.io/myhops/f12:latest-arm64" # Optionally tag as latest-arm64
+
+    # Build flags to pass to `docker build`.
+    # --platform is explicitly set for this architecture.
+    # The --push flag is NOT needed here.
     build_flag_templates:
       - "--platform=linux/arm64"
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
       - "--label=org.opencontainers.image.version={{ .Version }}"
-      - "--push"  # <--- ADD THIS LINE
-    # 'contents' can be empty or removed
-
+      - "--push"
 
 # Docker Manifest configuration: Creates and pushes a multi-arch manifest list.
+# This section combines the architecture-specific images built above.
 docker_manifests:
-  - name_template: "ghcr.io/myhops/f12:{{ .Tag }}" # Manifest tag
+  - name_template: "ghcr.io/myhops/f12:{{ .Tag }}" # The main multi-arch tag
     image_templates: # Images to include in this manifest
-      - "ghcr.io/myhops/f12:{{ .Tag }}-amd64"
-      - "ghcr.io/myhops/f12:{{ .Tag }}-arm64"
-  - name_template: "ghcr.io/myhops/f12:latest" # 'latest' manifest tag
+      - "ghcr.io/myhops/f12:{{ .Tag }}-amd64" # Reference the AMD64 image tag
+      - "ghcr.io/myhops/f12:{{ .Tag }}-arm64" # Reference the ARM64 image tag
+  - name_template: "ghcr.io/myhops/f12:latest" # The 'latest' multi-arch tag
     image_templates:
-      - "ghcr.io/myhops/f12:latest-amd64"
-      - "ghcr.io/myhops/f12:latest-arm64"
+      - "ghcr.io/myhops/f12:latest-amd64"   # Reference the latest AMD64 image tag
+      - "ghcr.io/myhops/f12:latest-arm64"   # Reference the latest ARM64 image tag
 
 # Optional: Release configuration (e.g., for GitHub Releases)
 release:
   github:
     owner: myhops
     name: envprops
+
+# You can add other sections like `checksum`, `snapshot`, `changelog`, etc.
+# as per your requirements.

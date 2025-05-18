@@ -18,7 +18,6 @@ var (
 //go:embed envprops.doc.txt
 var envpropsExample string
 
-
 func ucEnvPropsConfig() usecases.EnvPropsConfig {
 	return usecases.EnvPropsConfig{
 		RootConfig: ucRootConfig(),

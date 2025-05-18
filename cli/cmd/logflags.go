@@ -30,7 +30,7 @@ func (*logLevelValue) Type() string {
 	return "slog.Level"
 }
 
-// NewLogLevelValue creates a new logLevelValue with the given default value and 
+// NewLogLevelValue creates a new logLevelValue with the given default value and
 // the pointer to the Loglevel.
 func NewLogLevelValue(value slog.Level, l *slog.Level) *logLevelValue {
 	*l = value
@@ -74,4 +74,3 @@ func NewLogformatValue(value string, p *string) *logFormatValue {
 	}
 	return f
 }
-
