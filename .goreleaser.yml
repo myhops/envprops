@@ -12,6 +12,8 @@ builds:
     main: ./cmd/f12              # Path to the main package (current directory)
     goos:                # Target Operating Systems
       - linux
+      - darwin
+      - windows
     goarch:              # Target Architectures
       - amd64
       - arm64
