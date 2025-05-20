@@ -88,3 +88,9 @@ f12 dockerfile reads the config part of the image manifest and prepends itself i
 
 Because F12_NO_ENVPROPS equals 1, building and running this image does not change anything in the behavior of the original image.
 
+### Get github token from bitwarden
+
+```bash
+bw list items --search "github.com myhops" | yq -p json '.[].fields[] | select(.name == "GHCR Access Token") | .value'
+```
+

@@ -1,10 +1,14 @@
 #!/bin/bash
 
+WDIR=$(dirname $(readlink -f $BASH_SOURCE[0]))
+
+docker network create structurizr
+
 docker run --rm -it \
     --name structurizr \
     --network structurizr \
     -p 8080:8080 \
-    -v $(readlink -f .):/conf \
+    -v ${WDIR}:/conf \
     -v structurizr-data:/usr/local/structurizr \
     -e F12_NO_ENVPROPS=0 \
     -e F12_DEFAULTS=/conf/test.properties \
@@ -12,7 +16,7 @@ docker run --rm -it \
     -e STRUCTURIZR_ADMIN= \
     -e STRUCTURIZR_WORKSPACE_THREADS=10 \
     -e OTEL_SDK_DISABLED=false \
-    -e JAVA_OPTS="-javaagent:/extras/opentelemetry-javaagent.jar" \
+    -e JAVA_OPTS="-Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.log.org.apache.http=DEBUG -javaagent:/extras/opentelemetry-javaagent.jar" \
     -e OTEL_SERVICE_NAME=structurizr-onpremises \
     -e OTEL_EXPORTER_OTLP_PROTOCOL=grpc \
     -e OTEL_EXPORTER_OTLP_INSECURE=true \
@@ -20,5 +24,5 @@ docker run --rm -it \
     -e OTEL_TRACES_EXPORTER=otlp \
     -e OTEL_METRICS_EXPORTER=otlp \
     -e OTEL_LOGS_EXPORTER=otlp \
-    -e F12_COPYFILES=/conf/otelcol.yaml:/tmp/otelcol.yaml \
+    -e F12_COPYFILES=/conf/log4j2.properties:/usr/local/structurizr/log4j2.properties \
     structurizr/onpremises-f12

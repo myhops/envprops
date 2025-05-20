@@ -1,0 +1,31 @@
+# Dockerfile.fixlog-minimal
+FROM ghcr.io/myhops/f12 AS f12-app
+
+# This base image already ADDs structurizr-onpremises.war to webapps/ROOT.war
+FROM structurizr/onpremises 
+COPY --from=f12-app /app/f12 /app/f12
+
+# 1. CRITICAL: Remove ALL known SLF4J 1.x BINDING JARS from broad paths
+#    This is to clean up anything unexpected from the tomcat base or other layers.
+#    The WEB-INF/lib of ROOT.war will be populated by Tomcat at runtime from the WAR,
+#    so this find command might not hit those if run before Tomcat unpacks.
+#    However, if the base tomcat:10.1.39 itself had any, this would catch them.
+RUN echo "Searching for and removing ALL potential SLF4J 1.x BINDINGS from common system/tomcat paths..."
+RUN find /usr/local/tomcat/lib /opt/java/openjdk/lib /usr/lib /lib -name "slf4j-nop-*.jar" -print -delete || echo "INFO: No slf4j-nop-*.jar found to delete."
+RUN find /usr/local/tomcat/lib /opt/java/openjdk/lib /usr/lib /lib -name "slf4j-simple-*.jar" -print -delete || echo "INFO: No slf4j-simple-*.jar found to delete."
+RUN find /usr/local/tomcat/lib /opt/java/openjdk/lib /usr/lib /lib -name "slf4j-log4j12-*.jar" -print -delete || echo "INFO: No slf4j-log4j12-*.jar found to delete."
+RUN find /usr/local/tomcat/lib /opt/java/openjdk /app /usr/lib /lib -name "slf4j-jdk14-*.jar" -print -delete || echo "INFO: No slf4j-jdk14-*.jar found to delete."
+RUN find /usr/local/tomcat/lib /opt/java/openjdk /app /usr/lib /lib -name "slf4j-jcl-*.jar" -print -delete || echo "INFO: No slf4j-jcl-*.jar found to delete."
+RUN find /usr/local/tomcat/lib /opt/java/openjdk /app /usr/lib /lib \( -name "logback-classic-1.0.*.jar" -o -name "logback-classic-1.1.*.jar" -o -name "logback-classic-1.2.*.jar" \) -print -delete || echo "INFO: No specified old logback-classic versions found to delete."
+RUN echo "Done searching/removing SLF4J 1.x bindings from common system/tomcat paths."
+
+# DO NOT ADD any slf4j-api, log4j-api, log4j-core, or log4j-slf4j-impl to /usr/local/tomcat/lib/
+# We will rely solely on what's inside structurizr-onpremises.war's WEB-INF/lib.
+
+ARG OTEL_JAVA_AGENT_URL=https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar
+ADD ${OTEL_JAVA_AGENT_URL} /extras/opentelemetry-javaagent.jar
+
+ENV F12_NO_ENVPROPS=1
+ENTRYPOINT ["/app/f12", "exec", "--" ]
+
+CMD ["catalina.sh", "run"]

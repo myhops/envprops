@@ -87,20 +87,12 @@ workspace {
 
         ssgEnvironment = deploymentEnvironment "SSG" {
         }
- 
+
+        
     }
 
     views {
-        styles {
-            element Person {
-                shape Person
-            }
-
-            element InScope {
-                background lightblue
-            }
-        }
-
+        
         systemContext c4modelSystem {
             include *
         }
@@ -112,7 +104,16 @@ workspace {
         deployment * productionEnv {
             include * 
         }
-    }
 
+        styles {
+            element Person {
+                shape Person
+            }
+
+            element InScope {
+                background lightblue
+            }
+        }
+    }
 }
 
