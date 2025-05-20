@@ -11,7 +11,7 @@ docker run --rm -it \
     -e F12_OUTPUT=/usr/local/structurizr/structurizr.properties \
     -e STRUCTURIZR_ADMIN= \
     -e STRUCTURIZR_WORKSPACE_THREADS=10 \
-    -e OTEL_SDK_DISABLED=true \
+    -e OTEL_SDK_DISABLED=false \
     -e JAVA_OPTS="-javaagent:/extras/opentelemetry-javaagent.jar" \
     -e OTEL_SERVICE_NAME=structurizr-onpremises \
     -e OTEL_EXPORTER_OTLP_PROTOCOL=grpc \

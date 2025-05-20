@@ -73,3 +73,7 @@ temp/
 # If you generate any local reports or large data files
 # reports/
 # data/local/
+
+
+c4model/.viewer_pid
+c4model/.structurizr/
